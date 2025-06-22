@@ -90,4 +90,4 @@ Contributions are welcome! Please submit a pull request with your changes.
 
 ## License
 
-[MIT License](LICENSE) (Replace with the actual license file if you have one)
+[MIT License](LICENSE)
