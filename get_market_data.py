@@ -5,8 +5,8 @@ from utils.websocket_utils import monitor_market
 from utils.gamma_utils import get_market_metadata
 from utils.utils import get_asset_id_mapping
 
-LON = "highest-temperature-in-london-on-june-22"
-NYC = "highest-temperature-in-nyc-on-june-22"
+LON = "highest-temperature-in-london-on-june-24"
+NYC = "highest-temperature-in-nyc-on-june-24"
 DATA_DIR = "data/market_data"
 
 def get_asset_ids(slug):
@@ -14,12 +14,6 @@ def get_asset_ids(slug):
     asset_id_mapping = get_asset_id_mapping(metadata)
 
     return asset_id_mapping
-
-async def fetch_data(id, sleep_time):
-    print(f"{id} routine started")
-    await asyncio.sleep(sleep_time)
-    print(f"{id} routine finished")
-    return f"sample data for {id}"
 
 async def main():
     nyc_mappings = get_asset_ids(NYC)
