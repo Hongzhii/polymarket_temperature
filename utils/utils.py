@@ -39,8 +39,20 @@ def load_raw_data(
     with open(fp) as f:
         raw_text = f.read()
 
-    raw_text = raw_text.replace("[]", "")
+    while "][]" in raw_text:
+        raw_text = raw_text.replace("][]", "]")
     raw_text = raw_text.replace("][", ",")
+    
+    # If raw text doesn't end with "]", find the nearest "]" to the end
+    if not raw_text.rstrip().endswith("]"):
+        last_bracket_index = raw_text.rfind("},")
+        if last_bracket_index != -1:
+            raw_text = raw_text[:last_bracket_index + 1]
+        raw_text += "]"
+    
+    with open("debug.txt", "w") as f:
+        f.write(raw_text)
+
     data = json.loads(raw_text)
 
     if timestamp:
