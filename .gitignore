@@ -3,4 +3,5 @@ data/
 aws/
 .json
 .csv
+.txt
 .DS_Store

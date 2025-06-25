@@ -49,9 +49,6 @@ def load_raw_data(
         if last_bracket_index != -1:
             raw_text = raw_text[:last_bracket_index + 1]
         raw_text += "]"
-    
-    with open("debug.txt", "w") as f:
-        f.write(raw_text)
 
     data = json.loads(raw_text)
 
