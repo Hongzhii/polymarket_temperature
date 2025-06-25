@@ -39,6 +39,7 @@ def load_raw_data(
     with open(fp) as f:
         raw_text = f.read()
 
+    raw_text = raw_text.replace("[]", "")
     raw_text = raw_text.replace("][", ",")
     data = json.loads(raw_text)
 
