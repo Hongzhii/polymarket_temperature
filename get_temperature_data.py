@@ -8,6 +8,7 @@ DATA_DIR = "data/temperature_data"
 
 # Dictionary to store the last recorded temperature for each location
 last_temperatures = {}
+last_measurement_times = {}
 
 def parse_xml(text):
     root = ET.fromstring(text)
@@ -25,7 +26,7 @@ def parse_xml(text):
     return result
 
 def query(iata_code):
-    global last_temperatures  # Access the global dictionary
+    global last_measurement_times  # Access the global dictionary
     url = "https://aviationweather.gov/api/data/metar"
     params = {
         "ids": iata_code,
@@ -36,7 +37,7 @@ def query(iata_code):
     now = datetime.datetime.now(datetime.UTC)
 
     parsed_response = parse_xml(response.text)
-    temperature = parsed_response['temperature']
+    time_of_measurement = parsed_response['time_of_measurement']
 
     # Determine the correct timezone for the location
     if iata_code == "KLGA":
@@ -51,10 +52,10 @@ def query(iata_code):
     fp = f"{iata_code}_{file_time.strftime('%Y-%m-%d')}.csv"
     fp = os.path.join(DATA_DIR, fp)
 
-    # Check if the temperature has changed
-    if iata_code in last_temperatures and last_temperatures[iata_code] == temperature:
-        print(f"Temperature for {iata_code} has not changed. Skipping update.")
-        return  # Skip writing if the temperature is the same
+    # Check if the measurement time has changed
+    if iata_code in last_measurement_times and last_measurement_times[iata_code] == time_of_measurement:
+        print(f"Time of measurement for {iata_code} has not changed. Skipping update.")
+        return  # Skip writing if the measurement time is the same
 
     # If the file doesn't exist, write the header
     if not os.path.exists(fp):
@@ -74,7 +75,7 @@ def query(iata_code):
         )
 
     # Update the last recorded temperature
-    last_temperatures[iata_code] = temperature
+    last_measurement_times[iata_code] = time_of_measurement
 
     print(parsed_response)
 
@@ -88,11 +89,11 @@ def main():
     while True:
         query(NYC_ID)
         query(LON_ID)
-        time.sleep(30)
+        time.sleep(5)
 
 while True:
     try:
         main()
     except Exception as e:
         print(e)
-    time.sleep(60)
+    time.sleep(10)
