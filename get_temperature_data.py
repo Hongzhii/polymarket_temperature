@@ -53,7 +53,17 @@ def query(iata_code):
     fp = os.path.join(DATA_DIR, fp)
 
     # Check if the measurement time has changed
-    if iata_code in last_measurement_times and last_measurement_times[iata_code] == time_of_measurement:
+    # Convert time_of_measurement to datetime object for comparison
+    time_of_measurement_dt = datetime.datetime.fromisoformat(time_of_measurement.replace('Z', '+00:00'))
+    
+    # Convert last measurement time to datetime object if it exists
+    if iata_code in last_measurement_times:
+        last_measurement_dt = datetime.datetime.fromisoformat(last_measurement_times[iata_code].replace('Z', '+00:00'))
+        updated = last_measurement_dt < time_of_measurement_dt
+    else:
+        updated = True  # First measurement for this location
+
+    if not updated:
         print(f"Time of measurement for {iata_code} has not changed. Skipping update.")
         return  # Skip writing if the measurement time is the same
 
