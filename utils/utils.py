@@ -41,14 +41,19 @@ def load_raw_data(
 
     while "][]" in raw_text:
         raw_text = raw_text.replace("][]", "]")
-    raw_text = raw_text.replace("][", ",")
+
+    while "[][" in raw_text:
+        raw_text = raw_text.replace("[][", "[")
     
     # If raw text doesn't end with "]", find the nearest "]" to the end
     if not raw_text.rstrip().endswith("]"):
-        last_bracket_index = raw_text.rfind("},")
+        last_bracket_index = raw_text.rfind("][")
         if last_bracket_index != -1:
             raw_text = raw_text[:last_bracket_index + 1]
-        raw_text += "]"
+        else:
+            raise Exception()
+        
+    raw_text = raw_text.replace("][", ",")
 
     data = json.loads(raw_text)
 
